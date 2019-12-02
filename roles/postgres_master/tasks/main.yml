@@ -21,3 +21,12 @@
 
 - name: Create replication user
   shell: sudo -u postgres psql -c "CREATE USER replica REPLICATION LOGIN ENCRYPTED PASSWORD '{{ postgresdb_replica_password }}'"
+
+- name: Create postgres user for odoo
+  shell: sudo -u postgres psql -c "create user {{ postgresdb_odoo_user }} with encrypted password '{{ postgres_odoouser_pass }}'"
+
+- name: Create DB for odoo
+  shell: sudo -u postgres psql -c "create database {{ postgresdb_odoo_db }}"
+
+- name: Grant user access on odoo db
+  shell: sudo -u postgres psql -c "grant all privileges on database {{ postgresdb_odoo_db }} to {{ postgresdb_odoo_user }}"

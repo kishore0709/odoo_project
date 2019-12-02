@@ -1,3 +1,6 @@
 postgresdb_password: "postgres123"
+postgresdb_odoo_db: "mydb"
+postgresdb_odoo_user: "myuser"
+postgres_odoouser_pass: "mypass"
 postgresdb_replica_password: "replica123"
 super_user: "vagrant"
