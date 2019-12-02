@@ -1,0 +1,35 @@
+---
+- name: Stop PostgreSQL server
+  service: name=postgresql-9.6 state=stopped
+
+- name: Move data backup
+  shell: mv data data-backup
+  args:
+    chdir: /var/lib/pgsql/9.6/
+
+- name: Create data directory
+  file:
+    path: /var/lib/pgsql/9.6/data
+    mode: 0700
+    owner: postgres
+    group: postgres
+    state: directory
+
+- name: Backup initial data from master
+  shell: su - postgres -c "PGPASSWORD={{ postgresdb_replica_password }} pg_basebackup -w -h {{ hostvars['postgres1'].ansible_ssh_host }} -U replica -D /var/lib/pgsql/9.6/data -P --xlog"
+
+- name: Deploy postgresql.conf
+  template:
+    src: postgresql.conf.j2
+    dest: /var/lib/pgsql/9.6/data/postgresql.conf
+
+- name: Deploy recovery.conf
+  template:
+    src: recovery.conf.j2
+    dest: /var/lib/pgsql/9.6/data/recovery.conf
+    mode: 0600
+    owner: postgres
+    group: postgres
+
+- name: Ensure the PostgreSQL service is running
+  service: name=postgresql-9.6 state=started enabled=yes

@@ -1,0 +1,5 @@
+standby_mode = 'on'
+ 
+primary_conninfo = 'host={{ hostvars['postgres1'].ansible_ssh_host }} port=5432 user=replica password={{ postgresdb_replica_password }} application_name=postgres1'
+ 
+trigger_file = '/tmp/postgresql.trigger.5432'

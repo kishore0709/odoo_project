@@ -1,0 +1,31 @@
+- name: Install Docker
+  shell: curl -fsSL https://get.docker.com/ | sh
+
+- name: Start Docker engine
+  service: name=docker state=started enabled=yes
+
+- name: Allow Vagrant user to execute docker commands
+  shell: sudo usermod -aG docker {{ super_user }}
+
+- name: Install epel repo 
+  yum:
+    name: epel-release
+    state: latest
+
+- name: Install pip
+  yum:
+    name: python-pip
+    state: latest
+
+- name: Install docker python module on odoo servers
+  pip: 
+    name: docker
+
+- name: Create container
+  docker_container:
+    name: odoo_container4
+    image: kishordockertest/kishor:1
+    privileged: yes
+    ports:
+     - "8060:8069"
+

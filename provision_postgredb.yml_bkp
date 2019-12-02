@@ -1,0 +1,37 @@
+- name: Postgres DB common setup
+  hosts: postgresdb
+  gather_facts: yes
+  become: yes
+  become_method: sudo
+  vars_files:
+    - vars/main.yml
+  roles:
+    - postgres_common
+
+- name: Postgres DB master setup
+  hosts: postgres1
+  become: yes
+  become_method: sudo
+  gather_facts: yes
+  vars_files:
+    - vars/main.yml
+  roles:
+    - postgres_master
+
+- name: Postgres DB slave setup
+  hosts: postgres2
+  become: yes
+  become_method: sudo
+  gather_facts: yes
+  vars_files:
+    - vars/main.yml
+  roles:
+    - postgres_slave
+
+- name: Odoo servers setup in a Docker container
+  hosts: odoo2
+  become: yes
+  decome_method: sudo
+  gather_facts: yes
+  roles:
+    - odoo_setup 

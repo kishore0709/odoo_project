@@ -1,0 +1,40 @@
+---
+- name: Install pgdg-centos96 RPM
+  yum: 
+    name: http://yum.postgresql.org/9.6/redhat/rhel-7-x86_64/pgdg-centos96-9.6-3.noarch.rpm
+    state: present
+
+- name: Install PostgreSQL RPM
+  yum:
+    name: ['postgresql96-server', 'postgresql96-contrib', 'nano'] 
+    state: latest
+
+- name: Initialize database
+  shell: sudo ./postgresql96-setup initdb
+  args:
+    chdir: /usr/pgsql-9.6/bin/
+ 
+- name: Ensure the PostgreSQL service is running
+  service: name=postgresql-9.6 state=started enabled=yes 
+
+- name: Wait for server to start
+  wait_for:
+    port: 5432
+
+- name: Change postgres password
+  shell: sudo -u postgres psql -c "ALTER USER postgres WITH password '{{ postgresdb_password }}'"
+
+- name: Start and enable firewalld
+  service: name=firewalld state=started enabled=yes
+
+- name: Allow postgresql through firewall
+  firewalld: 
+    service: postgresql
+    permanent: yes
+    state: enabled
+
+- name: Reload firewalld
+  shell: firewall-cmd --reload
+ 
+- name: List reloaded firewall
+  shell: firewall-cmd --list-all

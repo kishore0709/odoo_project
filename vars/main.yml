@@ -1,0 +1,3 @@
+postgresdb_password: "postgres123"
+postgresdb_replica_password: "replica123"
+super_user: "vagrant"
