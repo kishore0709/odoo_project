@@ -25,6 +25,9 @@
 - name: Create postgres user for odoo
   shell: sudo -u postgres psql -c "create user {{ postgresdb_odoo_user }} with encrypted password '{{ postgres_odoouser_pass }}'"
 
+- name: Allow role
+  shell: sudo -u postgres psql -c "alter user {{ postgresdb_odoo_user }} createdb"
+
 - name: Create DB for odoo
   shell: sudo -u postgres psql -c "create database {{ postgresdb_odoo_db }}"
 
