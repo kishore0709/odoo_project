@@ -13,3 +13,6 @@ odoo3 ansible_ssh_host=192.168.33.19
 
 [monitoring]
 nagios ansible_ssh_host=192.168.33.20
+
+[odoo:vars]
+odoo_port=8069
