@@ -27,5 +27,5 @@
     image: kishordockertest/kishor:1
     privileged: yes
     ports:
-     - "8060:8069"
+     - "8069:8069"
 
